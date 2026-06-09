@@ -1,0 +1,758 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Stage 4 Multi-Agent Demo</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f6f8fb;
+      --panel: #ffffff;
+      --text: #172033;
+      --muted: #667085;
+      --line: #c8d0dc;
+      --law: #2563eb;
+      --route: #b45309;
+      --tax: #0f766e;
+      --compliance: #7c3aed;
+      --privacy: #c2410c;
+      --aggregate: #15803d;
+      --danger: #b91c1c;
+      --shadow: 0 12px 32px rgba(15, 23, 42, 0.08);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      letter-spacing: 0;
+    }
+
+    .app {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: minmax(330px, 420px) minmax(0, 1fr);
+    }
+
+    aside {
+      background: var(--panel);
+      border-right: 1px solid var(--line);
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    main {
+      padding: 24px;
+      display: grid;
+      grid-template-rows: auto minmax(320px, 1fr) auto;
+      gap: 18px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 24px;
+      line-height: 1.2;
+    }
+
+    h2 {
+      margin: 0;
+      font-size: 16px;
+      line-height: 1.25;
+    }
+
+    p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.5;
+      font-size: 14px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      color: #344054;
+      font-weight: 700;
+      font-size: 13px;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 132px;
+      resize: vertical;
+      border: 1px solid #b8c2d1;
+      border-radius: 8px;
+      padding: 12px;
+      font: inherit;
+      color: var(--text);
+      background: #fff;
+      line-height: 1.45;
+    }
+
+    textarea:focus {
+      outline: 3px solid rgba(37, 99, 235, 0.18);
+      border-color: var(--law);
+    }
+
+    .button-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      align-items: center;
+    }
+
+    button {
+      border: 0;
+      border-radius: 8px;
+      min-height: 42px;
+      padding: 0 14px;
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+      color: #fff;
+      background: #1f2937;
+    }
+
+    button.secondary {
+      color: #243043;
+      background: #e7ebf2;
+    }
+
+    button:disabled {
+      cursor: not-allowed;
+      opacity: 0.65;
+    }
+
+    .examples {
+      display: grid;
+      gap: 8px;
+    }
+
+    .examples button {
+      min-height: 38px;
+      text-align: left;
+      color: #233044;
+      background: #eef2f7;
+      font-weight: 600;
+    }
+
+    .status-strip {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .metric {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 12px;
+      box-shadow: var(--shadow);
+      min-height: 72px;
+    }
+
+    .metric strong {
+      display: block;
+      font-size: 22px;
+      line-height: 1.1;
+    }
+
+    .metric span {
+      display: block;
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .workspace {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      display: grid;
+      grid-template-columns: minmax(430px, 1fr) minmax(330px, 440px);
+      min-height: 450px;
+    }
+
+    .graph {
+      position: relative;
+      min-height: 450px;
+      padding: 28px;
+      background: #fbfcff;
+      border-right: 1px solid var(--line);
+      overflow: auto;
+    }
+
+    .node {
+      position: absolute;
+      width: 170px;
+      min-height: 74px;
+      border: 2px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      display: grid;
+      align-content: center;
+      gap: 5px;
+      padding: 12px;
+      box-shadow: 0 8px 22px rgba(15, 23, 42, 0.07);
+      transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
+    }
+
+    .node.active {
+      transform: translateY(-3px);
+      background: #fff;
+    }
+
+    .node.done {
+      background: #f8fafc;
+    }
+
+    .node.idle {
+      opacity: 0.5;
+    }
+
+    .node h3 {
+      margin: 0;
+      font-size: 14px;
+      line-height: 1.25;
+    }
+
+    .node small {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.25;
+    }
+
+    .node .pill {
+      width: fit-content;
+      max-width: 100%;
+      border-radius: 999px;
+      padding: 3px 8px;
+      color: #fff;
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .law { left: 42px; top: 58px; border-color: var(--law); }
+    .router { left: 278px; top: 58px; border-color: var(--route); }
+    .tax { left: 528px; top: 38px; border-color: var(--tax); }
+    .compliance { left: 528px; top: 166px; border-color: var(--compliance); }
+    .privacy { left: 528px; top: 294px; border-color: var(--privacy); }
+    .aggregate { left: 278px; top: 328px; border-color: var(--aggregate); }
+
+    .law .pill { background: var(--law); }
+    .router .pill { background: var(--route); }
+    .tax .pill { background: var(--tax); }
+    .compliance .pill { background: var(--compliance); }
+    .privacy .pill { background: var(--privacy); }
+    .aggregate .pill { background: var(--aggregate); }
+
+    svg.flow {
+      position: absolute;
+      inset: 0;
+      min-width: 740px;
+      min-height: 450px;
+      pointer-events: none;
+    }
+
+    .edge {
+      stroke: #94a3b8;
+      stroke-width: 3;
+      fill: none;
+      marker-end: url(#arrow);
+    }
+
+    .edge.active {
+      stroke: #1f2937;
+      stroke-width: 4;
+    }
+
+    .edge.skipped {
+      stroke: #d5dbe5;
+      stroke-dasharray: 7 7;
+    }
+
+    .side-panel {
+      display: grid;
+      grid-template-rows: auto minmax(0, 1fr);
+      min-height: 450px;
+    }
+
+    .tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .tab {
+      min-height: 44px;
+      color: #475569;
+      background: #f7f9fc;
+      border-radius: 0;
+      border-right: 1px solid var(--line);
+    }
+
+    .tab.active {
+      color: #111827;
+      background: #fff;
+    }
+
+    .panel {
+      padding: 16px;
+      overflow: auto;
+    }
+
+    .log {
+      display: grid;
+      gap: 10px;
+    }
+
+    .event {
+      border: 1px solid #dde3ec;
+      border-radius: 8px;
+      padding: 10px;
+      background: #fff;
+    }
+
+    .event strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 13px;
+    }
+
+    .event span {
+      display: block;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .answer {
+      white-space: pre-wrap;
+      line-height: 1.5;
+      font-size: 14px;
+      color: #263247;
+    }
+
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      display: inline-block;
+      margin-right: 5px;
+      vertical-align: -1px;
+    }
+
+    .footer {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      align-items: center;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    @media (max-width: 980px) {
+      .app {
+        grid-template-columns: 1fr;
+      }
+
+      aside {
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+      }
+
+      main {
+        padding: 16px;
+      }
+
+      .status-strip {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .workspace {
+        grid-template-columns: 1fr;
+      }
+
+      .graph {
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+        min-height: 520px;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .graph {
+        min-height: 760px;
+      }
+
+      svg.flow {
+        display: none;
+      }
+
+      .node {
+        position: static;
+        width: 100%;
+        margin-bottom: 12px;
+      }
+
+      .status-strip {
+        grid-template-columns: 1fr;
+      }
+
+      .footer {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside>
+      <div>
+        <h1>Stage 4 Multi-Agent Demo</h1>
+        <p>Demo tương tác cho graph in-process: lead attorney phân tích, router chọn specialist agents, rồi aggregator tổng hợp kết quả.</p>
+      </div>
+
+      <form id="demoForm">
+        <label for="question">Câu hỏi</label>
+        <textarea id="question">If a company leaks customer data, violates GDPR, and avoids taxes, what are the legal, privacy, tax, and regulatory consequences?</textarea>
+        <div class="button-row" style="margin-top: 10px;">
+          <button id="runBtn" type="submit">Run Graph</button>
+          <button id="resetBtn" class="secondary" type="button">Reset</button>
+        </div>
+      </form>
+
+      <section>
+        <h2>Ví dụ nhanh</h2>
+        <div class="examples" style="margin-top: 10px;">
+          <button type="button" data-example="If a company leaks customer data and violates GDPR, what are the privacy consequences?">Privacy / GDPR</button>
+          <button type="button" data-example="If a company avoids taxes and hides overseas revenue, what are the tax consequences?">Tax</button>
+          <button type="button" data-example="If a public company violates SEC reporting rules and SOX controls, what regulatory consequences follow?">Compliance</button>
+          <button type="button" data-example="If a company breaks a supplier contract, what remedies can the counterparty seek?">General Law Only</button>
+        </div>
+      </section>
+
+      <section>
+        <h2>Routing keywords</h2>
+        <p style="margin-top: 8px;"><strong>Tax:</strong> tax, IRS, thuế, offshore, FBAR, FATCA.</p>
+        <p><strong>Compliance:</strong> compliance, SEC, regulation, SOX, FCPA, AML.</p>
+        <p><strong>Privacy:</strong> data, privacy, GDPR, dữ liệu, CCPA, consent.</p>
+      </section>
+    </aside>
+
+    <main>
+      <section class="status-strip" aria-label="Graph metrics">
+        <div class="metric"><strong id="agentCount">0</strong><span>Agents selected</span></div>
+        <div class="metric"><strong id="parallelCount">0</strong><span>Parallel branches</span></div>
+        <div class="metric"><strong id="stepCount">0</strong><span>Events</span></div>
+        <div class="metric"><strong id="statusText">Idle</strong><span>Status</span></div>
+      </section>
+
+      <section class="workspace">
+        <div class="graph" aria-label="Stage 4 graph visualization">
+          <svg class="flow" viewBox="0 0 760 470" aria-hidden="true">
+            <defs>
+              <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+                <path d="M 0 0 L 10 5 L 0 10 z" fill="currentColor"></path>
+              </marker>
+            </defs>
+            <path id="edge-law-router" class="edge" d="M 212 96 L 278 96"></path>
+            <path id="edge-router-tax" class="edge" d="M 448 82 C 485 56, 500 70, 528 72"></path>
+            <path id="edge-router-compliance" class="edge" d="M 448 96 L 528 200"></path>
+            <path id="edge-router-privacy" class="edge" d="M 448 112 C 492 174, 498 306, 528 328"></path>
+            <path id="edge-router-aggregate" class="edge" d="M 363 132 L 363 328"></path>
+            <path id="edge-tax-aggregate" class="edge" d="M 528 104 C 454 154, 414 252, 390 328"></path>
+            <path id="edge-compliance-aggregate" class="edge" d="M 528 232 C 468 254, 420 304, 402 342"></path>
+            <path id="edge-privacy-aggregate" class="edge" d="M 528 360 C 482 370, 432 372, 448 364"></path>
+          </svg>
+
+          <article class="node law" data-node="law">
+            <span class="pill">Agent</span>
+            <h3>analyze_law</h3>
+            <small>Lead attorney tạo phân tích pháp lý tổng quát.</small>
+          </article>
+          <article class="node router" data-node="router">
+            <span class="pill">Router</span>
+            <h3>check_routing</h3>
+            <small>Chọn specialist bằng keyword routing.</small>
+          </article>
+          <article class="node tax idle" data-node="tax">
+            <span class="pill">Tax</span>
+            <h3>tax_agent</h3>
+            <small>IRS, tax evasion, FBAR/FATCA.</small>
+          </article>
+          <article class="node compliance idle" data-node="compliance">
+            <span class="pill">Compliance</span>
+            <h3>compliance_agent</h3>
+            <small>SEC, SOX, FCPA, AML, regulations.</small>
+          </article>
+          <article class="node privacy idle" data-node="privacy">
+            <span class="pill">Privacy</span>
+            <h3>privacy_agent</h3>
+            <small>GDPR, data protection, breach notice.</small>
+          </article>
+          <article class="node aggregate" data-node="aggregate">
+            <span class="pill">Final</span>
+            <h3>aggregate</h3>
+            <small>Tổng hợp các kết quả specialist.</small>
+          </article>
+        </div>
+
+        <div class="side-panel">
+          <div class="tabs">
+            <button id="logTab" class="tab active" type="button">Timeline</button>
+            <button id="answerTab" class="tab" type="button">Final Answer</button>
+          </div>
+          <div id="logPanel" class="panel">
+            <div id="log" class="log"></div>
+          </div>
+          <div id="answerPanel" class="panel" hidden>
+            <div id="answer" class="answer">Chạy graph để xem kết quả tổng hợp.</div>
+          </div>
+        </div>
+      </section>
+
+      <footer class="footer">
+        <div class="legend">
+          <span><i class="dot" style="background: var(--law);"></i>General Law</span>
+          <span><i class="dot" style="background: var(--tax);"></i>Tax</span>
+          <span><i class="dot" style="background: var(--compliance);"></i>Compliance</span>
+          <span><i class="dot" style="background: var(--privacy);"></i>Privacy</span>
+          <span><i class="dot" style="background: var(--aggregate);"></i>Aggregate</span>
+        </div>
+        <span>Offline simulation of <code>stages/stage_4_milti_agent/main.py</code></span>
+      </footer>
+    </main>
+  </div>
+
+  <script>
+    const form = document.getElementById("demoForm");
+    const questionInput = document.getElementById("question");
+    const runBtn = document.getElementById("runBtn");
+    const resetBtn = document.getElementById("resetBtn");
+    const log = document.getElementById("log");
+    const answer = document.getElementById("answer");
+    const logTab = document.getElementById("logTab");
+    const answerTab = document.getElementById("answerTab");
+    const logPanel = document.getElementById("logPanel");
+    const answerPanel = document.getElementById("answerPanel");
+    const statusText = document.getElementById("statusText");
+    const agentCount = document.getElementById("agentCount");
+    const parallelCount = document.getElementById("parallelCount");
+    const stepCount = document.getElementById("stepCount");
+
+    const defaultQuestion = questionInput.value;
+    let events = 0;
+    let running = false;
+
+    const routing = {
+      tax: ["tax", "irs", "thuế", "offshore", "fbar", "fatca", "evasion"],
+      compliance: ["compliance", "sec", "regulation", "sox", "fcpa", "aml"],
+      privacy: ["data", "privacy", "gdpr", "dữ liệu", "ccpa", "consent", "breach"]
+    };
+
+    const nodeNames = ["law", "router", "tax", "compliance", "privacy", "aggregate"];
+    const edgeNames = [
+      "law-router",
+      "router-tax",
+      "router-compliance",
+      "router-privacy",
+      "router-aggregate",
+      "tax-aggregate",
+      "compliance-aggregate",
+      "privacy-aggregate"
+    ];
+
+    function wait(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    function classify(question) {
+      const normalized = question.toLowerCase();
+      return {
+        tax: routing.tax.some(keyword => normalized.includes(keyword)),
+        compliance: routing.compliance.some(keyword => normalized.includes(keyword)),
+        privacy: routing.privacy.some(keyword => normalized.includes(keyword))
+      };
+    }
+
+    function setTab(name) {
+      const showLog = name === "log";
+      logTab.classList.toggle("active", showLog);
+      answerTab.classList.toggle("active", !showLog);
+      logPanel.hidden = !showLog;
+      answerPanel.hidden = showLog;
+    }
+
+    function setNode(name, state) {
+      const node = document.querySelector(`[data-node="${name}"]`);
+      node.classList.remove("active", "done", "idle");
+      if (state) node.classList.add(state);
+    }
+
+    function setEdge(name, state) {
+      const edge = document.getElementById(`edge-${name}`);
+      edge.classList.remove("active", "skipped");
+      if (state) edge.classList.add(state);
+    }
+
+    function addEvent(title, text) {
+      events += 1;
+      stepCount.textContent = String(events);
+      const item = document.createElement("div");
+      item.className = "event";
+      item.innerHTML = `<strong>${title}</strong><span>${text}</span>`;
+      log.appendChild(item);
+      log.scrollTop = log.scrollHeight;
+    }
+
+    function resetGraph() {
+      events = 0;
+      running = false;
+      runBtn.disabled = false;
+      statusText.textContent = "Idle";
+      agentCount.textContent = "0";
+      parallelCount.textContent = "0";
+      stepCount.textContent = "0";
+      log.innerHTML = "";
+      answer.textContent = "Chạy graph để xem kết quả tổng hợp.";
+      nodeNames.forEach(name => setNode(name, name === "tax" || name === "compliance" || name === "privacy" ? "idle" : ""));
+      edgeNames.forEach(name => setEdge(name, ""));
+      setTab("log");
+    }
+
+    function specialistText(name, question) {
+      if (name === "tax") {
+        return "Tax Agent: phân tích back taxes, interest, civil fraud penalty, IRS/DOJ exposure, và trách nhiệm cá nhân nếu có yếu tố cố ý.";
+      }
+      if (name === "compliance") {
+        return "Compliance Agent: phân tích SEC/SOX/FCPA/AML hoặc khung regulatory liên quan, gồm fines, reporting, monitoring và board oversight.";
+      }
+      if (name === "privacy") {
+        return "Privacy Agent: phân tích GDPR/CCPA, breach notification, quyền của chủ thể dữ liệu, tiền phạt và class action exposure.";
+      }
+      return `Law Agent: xác định nghĩa vụ, breach, remedies, damages và rủi ro pháp lý tổng quát cho câu hỏi: "${question}"`;
+    }
+
+    function buildAnswer(question, selected) {
+      const parts = [
+        `Question:\n${question}`,
+        "1. Legal analysis\nLead attorney xác định legal theory chính, nghĩa vụ hợp đồng/quy định liên quan, remedies và rủi ro kiện tụng."
+      ];
+
+      if (selected.tax) {
+        parts.push("2. Tax analysis\nCó dấu hiệu tax issue nên Tax Agent đánh giá back taxes, interest, civil penalties, fraud exposure và criminal referral nếu có hành vi cố ý.");
+      }
+      if (selected.compliance) {
+        parts.push("3. Compliance analysis\nCó dấu hiệu regulatory issue nên Compliance Agent đánh giá SEC/SOX/FCPA/AML hoặc framework tương ứng, gồm fines, audits và governance remediation.");
+      }
+      if (selected.privacy) {
+        parts.push("4. Privacy / GDPR analysis\nCó dấu hiệu data/privacy nên Privacy Agent đánh giá breach notification, GDPR/CCPA penalties, quyền của người dùng và rủi ro class action.");
+      }
+      if (!selected.tax && !selected.compliance && !selected.privacy) {
+        parts.push("2. Specialist routing\nKhông có keyword tax/compliance/privacy nên graph bỏ qua specialist branches và chuyển thẳng tới aggregate.");
+      }
+
+      parts.push("Final aggregate\nAggregator gom các phân tích, loại bỏ trùng lặp và trả lời có cấu trúc. Trong Stage 4 thật, các node này gọi LLM; demo HTML này mô phỏng luồng tương tác và routing.");
+      return parts.join("\n\n");
+    }
+
+    async function runGraph(event) {
+      event.preventDefault();
+      if (running) return;
+
+      resetGraph();
+      running = true;
+      runBtn.disabled = true;
+      statusText.textContent = "Running";
+
+      const question = questionInput.value.trim() || defaultQuestion;
+      const selected = classify(question);
+      const specialists = Object.entries(selected).filter(([, enabled]) => enabled).map(([name]) => name);
+
+      agentCount.textContent = String(2 + specialists.length);
+      parallelCount.textContent = String(specialists.length);
+
+      setNode("law", "active");
+      setEdge("law-router", "active");
+      addEvent("START -> analyze_law", "Lead attorney nhận câu hỏi và tạo law_analysis.");
+      await wait(650);
+      setNode("law", "done");
+
+      setNode("router", "active");
+      addEvent("analyze_law -> check_routing", "Router kiểm tra keyword để quyết định Send() tới specialist agents.");
+      await wait(650);
+
+      ["tax", "compliance", "privacy"].forEach(name => {
+        setNode(name, selected[name] ? "active" : "idle");
+        setEdge(`router-${name}`, selected[name] ? "active" : "skipped");
+      });
+      setEdge("router-aggregate", specialists.length ? "skipped" : "active");
+      setNode("router", "done");
+      addEvent("Routing decision", `tax=${selected.tax}, compliance=${selected.compliance}, privacy=${selected.privacy}`);
+
+      if (specialists.length) {
+        addEvent("Parallel Send()", `Dispatch song song tới: ${specialists.join(", ")}.`);
+      } else {
+        addEvent("No specialist selected", "Graph chuyển thẳng tới aggregate_results.");
+      }
+
+      await wait(700);
+
+      for (const name of specialists) {
+        setNode(name, "done");
+        setEdge(`${name}-aggregate`, "active");
+        addEvent(`${name}_agent -> aggregate`, specialistText(name, question));
+        await wait(360);
+      }
+
+      setNode("aggregate", "active");
+      addEvent("aggregate", "Aggregator tổng hợp law_analysis và các specialist results thành final_answer.");
+      await wait(650);
+      setNode("aggregate", "done");
+
+      answer.textContent = buildAnswer(question, selected);
+      statusText.textContent = "Done";
+      running = false;
+      runBtn.disabled = false;
+      setTab("answer");
+    }
+
+    form.addEventListener("submit", runGraph);
+    resetBtn.addEventListener("click", () => {
+      questionInput.value = defaultQuestion;
+      resetGraph();
+    });
+    logTab.addEventListener("click", () => setTab("log"));
+    answerTab.addEventListener("click", () => setTab("answer"));
+
+    document.querySelectorAll("[data-example]").forEach(button => {
+      button.addEventListener("click", () => {
+        questionInput.value = button.dataset.example;
+        resetGraph();
+      });
+    });
+
+    resetGraph();
+  </script>
+</body>
+</html>

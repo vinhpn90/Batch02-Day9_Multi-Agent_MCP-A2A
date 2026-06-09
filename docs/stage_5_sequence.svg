@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1240" height="820" viewBox="0 0 1240 820" role="img" aria-labelledby="title desc">
+  <title id="title">Stage 5 A2A Request Sequence</title>
+  <desc id="desc">Sequence diagram showing User to Customer Agent, Registry discovery, Law Agent, Tax Agent, OpenRouter LLM, and final response.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#334155"/>
+    </marker>
+    <style>
+      .bg { fill: #f8fafc; }
+      .head { fill: #e0f2fe; stroke: #0369a1; stroke-width: 1.8; rx: 7; }
+      .head2 { fill: #f2f0ff; stroke: #6d28d9; stroke-width: 1.8; rx: 7; }
+      .head3 { fill: #dcfce7; stroke: #15803d; stroke-width: 1.8; rx: 7; }
+      .line { stroke: #94a3b8; stroke-width: 1.5; stroke-dasharray: 6 6; }
+      .msg { stroke: #334155; stroke-width: 1.8; marker-end: url(#arrow); fill: none; }
+      .note { fill: #fff7ed; stroke: #fb923c; stroke-width: 1.5; rx: 7; }
+      text { font-family: Arial, sans-serif; fill: #0f172a; }
+      .title { font-size: 22px; font-weight: 700; text-anchor: middle; }
+      .actor { font-size: 14px; font-weight: 700; text-anchor: middle; dominant-baseline: middle; }
+      .label { font-size: 13px; dominant-baseline: middle; }
+      .small { font-size: 12px; fill: #475569; }
+    </style>
+  </defs>
+  <rect class="bg" width="1240" height="820"/>
+  <text x="620" y="36" class="title">Stage 5 Distributed A2A Request Flow</text>
+  <text x="620" y="60" class="small" text-anchor="middle">trace_id=c44fc1bb-2db0-499e-bd6e-567478e57e25</text>
+
+  <g>
+    <rect x="40" y="92" width="120" height="46" class="head"/>
+    <text x="100" y="115" class="actor">User</text>
+    <rect x="205" y="92" width="150" height="46" class="head2"/>
+    <text x="280" y="115" class="actor">Customer :10100</text>
+    <rect x="405" y="92" width="140" height="46" class="head3"/>
+    <text x="475" y="115" class="actor">Registry :10000</text>
+    <rect x="595" y="92" width="130" height="46" class="head2"/>
+    <text x="660" y="115" class="actor">Law :10101</text>
+    <rect x="780" y="92" width="130" height="46" class="head2"/>
+    <text x="845" y="115" class="actor">Tax :10102</text>
+    <rect x="965" y="92" width="140" height="46" class="head2"/>
+    <text x="1035" y="115" class="actor">Compliance :10103</text>
+    <rect x="1130" y="92" width="80" height="46" class="head3"/>
+    <text x="1170" y="115" class="actor">LLM</text>
+  </g>
+
+  <g>
+    <line x1="100" y1="138" x2="100" y2="760" class="line"/>
+    <line x1="280" y1="138" x2="280" y2="760" class="line"/>
+    <line x1="475" y1="138" x2="475" y2="760" class="line"/>
+    <line x1="660" y1="138" x2="660" y2="760" class="line"/>
+    <line x1="845" y1="138" x2="845" y2="760" class="line"/>
+    <line x1="1035" y1="138" x2="1035" y2="760" class="line"/>
+    <line x1="1170" y1="138" x2="1170" y2="760" class="line"/>
+  </g>
+
+  <path d="M 100 170 L 280 170" class="msg"/><text x="114" y="158" class="label">A2A send_message(question)</text>
+  <path d="M 280 215 L 1170 215" class="msg"/><text x="295" y="203" class="label">delegate decision</text>
+  <path d="M 1170 245 L 280 245" class="msg"/><text x="890" y="233" class="label">call delegate_to_legal_agent</text>
+  <path d="M 280 290 L 475 290" class="msg"/><text x="295" y="278" class="label">discover("legal_question")</text>
+  <path d="M 475 320 L 280 320" class="msg"/><text x="315" y="308" class="label">law-agent endpoint</text>
+  <path d="M 280 365 L 660 365" class="msg"/><text x="295" y="353" class="label">A2A to Law, depth=1</text>
+  <path d="M 660 410 L 1170 410" class="msg"/><text x="675" y="398" class="label">analyze + route</text>
+  <path d="M 1170 440 L 660 440" class="msg"/><text x="860" y="428" class="label">needs_tax=True, needs_compliance=False</text>
+  <path d="M 660 485 L 475 485" class="msg"/><text x="505" y="473" class="label">discover("tax_question")</text>
+  <path d="M 475 515 L 660 515" class="msg"/><text x="500" y="503" class="label">tax-agent endpoint</text>
+  <path d="M 660 560 L 845 560" class="msg"/><text x="675" y="548" class="label">A2A to Tax, depth=2</text>
+  <path d="M 845 605 L 1170 605" class="msg"/><text x="860" y="593" class="label">tax specialist analysis</text>
+  <path d="M 1170 635 L 845 635" class="msg"/><text x="1010" y="623" class="label">tax answer</text>
+  <path d="M 845 665 L 660 665" class="msg"/><text x="690" y="653" class="label">tax artifact</text>
+  <path d="M 660 695 L 1170 695" class="msg"/><text x="675" y="683" class="label">aggregate</text>
+  <path d="M 660 725 L 280 725" class="msg"/><text x="375" y="713" class="label">legal response</text>
+  <path d="M 280 755 L 100 755" class="msg"/><text x="125" y="743" class="label">final answer</text>
+
+  <rect x="615" y="160" width="565" height="54" class="note"/>
+  <text x="632" y="183" class="small">Dynamic discovery test: after stopping Tax Agent, Registry still returned the tax endpoint.</text>
+  <text x="632" y="202" class="small">Law Agent logged httpx.ConnectError and returned a fallback response instead of crashing.</text>
+</svg>

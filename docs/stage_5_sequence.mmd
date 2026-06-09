@@ -1,0 +1,33 @@
+sequenceDiagram
+    autonumber
+    participant User
+    participant Customer as Customer Agent :10100
+    participant Registry as Registry :10000
+    participant Law as Law Agent :10101
+    participant Tax as Tax Agent :10102
+    participant Compliance as Compliance Agent :10103
+    participant LLM as OpenRouter LLM
+
+    Note over Customer,Tax: trace_id=c44fc1bb-2db0-499e-bd6e-567478e57e25
+    User->>Customer: A2A send_message(question)
+    Customer->>LLM: Decide whether to delegate
+    LLM-->>Customer: Call delegate_to_legal_agent
+    Customer->>Registry: discover("legal_question")
+    Registry-->>Customer: law-agent endpoint
+    Customer->>Law: A2A send_message(question, trace_id, depth=1)
+    Law->>LLM: Analyze law and route specialists
+    LLM-->>Law: needs_tax=True, needs_compliance=False
+    Law->>Registry: discover("tax_question")
+    Registry-->>Law: tax-agent endpoint
+    Law->>Tax: A2A send_message(question, trace_id, depth=2)
+    Tax->>LLM: Tax specialist analysis
+    LLM-->>Tax: Tax answer
+    Tax-->>Law: Tax analysis artifact
+    Law->>LLM: Aggregate law + tax analysis
+    LLM-->>Law: Final legal response
+    Law-->>Customer: Legal specialist response
+    Customer->>LLM: Format final user response
+    LLM-->>Customer: Final answer
+    Customer-->>User: A2A response
+
+    Note over Law,Tax: Dynamic discovery test: when Tax Agent was stopped, Registry still returned tax-agent endpoint, but Law Agent failed with httpx.ConnectError and returned a fallback response.

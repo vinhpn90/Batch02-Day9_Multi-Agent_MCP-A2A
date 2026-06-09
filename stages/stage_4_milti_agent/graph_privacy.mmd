@@ -1,0 +1,25 @@
+---
+config:
+  flowchart:
+    curve: linear
+---
+graph TD;
+    __start__([__start__])
+    analyze_law(analyze_law)
+    check_routing(check_routing)
+    call_tax_specialist(call_tax_specialist)
+    call_compliance_specialist(call_compliance_specialist)
+    call_privacy_specialist(call_privacy_specialist)
+    aggregate(aggregate)
+    __end__([__end__])
+
+    __start__ --> analyze_law
+    analyze_law --> check_routing
+    check_routing -.-> call_tax_specialist
+    check_routing -.-> call_compliance_specialist
+    check_routing -.-> call_privacy_specialist
+    check_routing -.-> aggregate
+    call_tax_specialist --> aggregate
+    call_compliance_specialist --> aggregate
+    call_privacy_specialist --> aggregate
+    aggregate --> __end__

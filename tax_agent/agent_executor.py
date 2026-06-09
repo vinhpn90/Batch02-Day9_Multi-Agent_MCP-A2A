@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import logging
+import os
 from uuid import uuid4
 
 from langchain_core.messages import HumanMessage
@@ -48,21 +49,28 @@ class TaxAgentExecutor(AgentExecutor):
         await updater.start_work()
 
         try:
-            result = await _get_graph().ainvoke(
-                {"messages": [HumanMessage(content=question)]},
-                config={"configurable": {"thread_id": context_id}},
-            )
+            if os.getenv("STAGE5_FAST_DEMO", "").lower() == "true":
+                answer = (
+                    "Tax avoidance/evasion can trigger back taxes, interest, civil penalties, "
+                    "fraud penalties up to 75% of underpayment, audits, and criminal exposure "
+                    "for willful evasion. IRS/DOJ and state tax authorities may be involved."
+                )
+            else:
+                result = await _get_graph().ainvoke(
+                    {"messages": [HumanMessage(content=question)]},
+                    config={"configurable": {"thread_id": context_id}},
+                )
 
-            # Extract the last AI message
-            answer = ""
-            for msg in reversed(result.get("messages", [])):
-                if hasattr(msg, "content") and msg.content:
-                    if not isinstance(msg, HumanMessage):
-                        answer = msg.content
-                        break
+                # Extract the last AI message
+                answer = ""
+                for msg in reversed(result.get("messages", [])):
+                    if hasattr(msg, "content") and msg.content:
+                        if not isinstance(msg, HumanMessage):
+                            answer = msg.content
+                            break
 
-            if not answer:
-                answer = "I was unable to generate a tax analysis at this time."
+                if not answer:
+                    answer = "I was unable to generate a tax analysis at this time."
 
             await updater.add_artifact(
                 parts=[Part(root=TextPart(text=answer))],

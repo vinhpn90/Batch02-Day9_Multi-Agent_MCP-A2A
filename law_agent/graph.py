@@ -9,8 +9,8 @@ Send API so that both sub-agent calls happen concurrently.
 
 from __future__ import annotations
 
-import json
 import logging
+import os
 from typing import Annotated, TypedDict
 
 from langchain_core.messages import HumanMessage, SystemMessage
@@ -53,6 +53,15 @@ class LawState(TypedDict):
 
 async def analyze_law(state: LawState) -> dict:
     """LLM analysis from a contract / general law perspective."""
+    if os.getenv("STAGE5_FAST_DEMO", "").lower() == "true":
+        return {
+            "law_analysis": (
+                "Contract breach may create civil liability for expectation damages, "
+                "consequential damages if foreseeable, specific performance, injunctive "
+                "relief, attorney fees if authorized, and reputational/business fallout."
+            )
+        }
+
     llm = get_llm()
     messages = [
         SystemMessage(
@@ -79,39 +88,20 @@ async def check_routing(state: LawState) -> dict:
         logger.info("Max delegation depth reached (%d); skipping sub-agents", depth)
         return {"needs_tax": False, "needs_compliance": False}
 
-    llm = get_llm()
-    messages = [
-        SystemMessage(
-            content=(
-                'You are a legal routing expert. Based on the question, decide whether '
-                'specialist sub-agents are needed.\n'
-                'Reply with ONLY valid JSON — no markdown, no extra text:\n'
-                '{"needs_tax": <true|false>, "needs_compliance": <true|false>}\n\n'
-                'needs_tax = true  → question involves tax law, IRS, tax evasion, penalties\n'
-                'needs_compliance = true → question involves regulatory compliance, SEC, SOX, AML, FCPA'
-            )
-        ),
-        HumanMessage(content=state["question"]),
-    ]
-    result = await llm.ainvoke(messages)
-    raw = result.content.strip()
-
-    # Strip markdown code fences if present
-    if raw.startswith("```"):
-        raw = raw.split("```")[1]
-        if raw.startswith("json"):
-            raw = raw[4:]
-        raw = raw.strip()
-
-    try:
-        parsed = json.loads(raw)
-    except json.JSONDecodeError:
-        logger.warning("Routing LLM returned non-JSON: %r — defaulting to both=True", raw)
-        parsed = {"needs_tax": True, "needs_compliance": True}
-
-    needs_tax = bool(parsed.get("needs_tax", True))
-    needs_compliance = bool(parsed.get("needs_compliance", True))
-    logger.info("Routing decision: needs_tax=%s needs_compliance=%s", needs_tax, needs_compliance)
+    question_lower = state["question"].lower()
+    needs_tax = any(
+        kw in question_lower
+        for kw in ["tax", "irs", "thuế", "evasion", "avoidance", "offshore", "fbar", "fatca"]
+    )
+    needs_compliance = any(
+        kw in question_lower
+        for kw in ["compliance", "sec", "regulation", "sox", "aml", "fcpa"]
+    )
+    logger.info(
+        "Keyword routing decision: needs_tax=%s needs_compliance=%s",
+        needs_tax,
+        needs_compliance,
+    )
     return {"needs_tax": needs_tax, "needs_compliance": needs_compliance}
 
 
@@ -176,6 +166,22 @@ async def call_compliance(state: LawState) -> dict:
 
 async def aggregate(state: LawState) -> dict:
     """Combine law_analysis, tax_result, and compliance_result into a final answer."""
+    if os.getenv("STAGE5_FAST_DEMO", "").lower() == "true":
+        sections: list[str] = []
+        if state.get("law_analysis"):
+            sections.append(f"## Legal Analysis\n{state['law_analysis']}")
+        if state.get("tax_result"):
+            sections.append(f"## Tax Analysis\n{state['tax_result']}")
+        if state.get("compliance_result"):
+            sections.append(f"## Regulatory Compliance Analysis\n{state['compliance_result']}")
+        sections.append(
+            "## Summary\n"
+            "The optimized Stage 5 path still uses Registry discovery and A2A delegation, "
+            "but avoids non-essential LLM calls for routing/front-desk formatting and uses "
+            "cached deterministic analysis in demo mode."
+        )
+        return {"final_answer": "\n\n".join(sections)}
+
     llm = get_llm()
 
     sections: list[str] = []
