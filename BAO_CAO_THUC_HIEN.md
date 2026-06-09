@@ -5,6 +5,8 @@
 - Dự án: `Batch02-Day9_Multi-Agent_MCP-A2A`
 - Nội dung: Codelab Multi-Agent với MCP/A2A, LangGraph, LangChain, OpenRouter
 - Ngày thực hiện: 2026-06-09
+- Họ và tên: Phạm Ngọc Vinh
+- Mã học viên: 2A202600563
 
 ## 2. Phần 1 - Direct LLM Calling
 
@@ -489,19 +491,6 @@ Customer direct delegate
   - Law Agent
   - Tax Agent
   - A2A message passing
-
-### 8.3. Cách dùng khi thuyết trình
-
-Thứ tự đề xuất khi demo:
-
-1. Mở `stages/stage_4_milti_agent/demo.html`.
-2. Chạy ví dụ `Privacy / GDPR` để cho thấy router chọn `privacy_agent`.
-3. Chạy ví dụ `Tax` để cho thấy router chọn `tax_agent`.
-4. Chạy ví dụ tổng hợp có cả `data`, `gdpr`, `tax` để thấy nhiều agents cùng tham gia.
-5. Mở `docs/stage5_latency_demo.html`.
-6. Chọn `Before`, bấm `Run Demo` để trình bày flow ban đầu.
-7. Chọn `After`, bấm `Run Demo` để trình bày flow tối ưu.
-8. Bấm `Show Comparison` để kết luận latency giảm từ `70.30s` xuống `0.26s`.
 
 ## 9. Các file diagram đã tạo
 
