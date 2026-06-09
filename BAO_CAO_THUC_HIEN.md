@@ -369,10 +369,139 @@ Chức năng:
 
 ## 8. File HTML demo đã tạo
 
-Các file HTML có thể mở trực tiếp bằng trình duyệt:
+Các file HTML có thể mở trực tiếp bằng trình duyệt, không cần chạy server:
 
-- `stages/stage_4_milti_agent/demo.html`
-- `docs/stage5_latency_demo.html`
+```bash
+open stages/stage_4_milti_agent/demo.html
+open docs/stage5_latency_demo.html
+```
+
+### 8.1. `stages/stage_4_milti_agent/demo.html`
+
+Đây là file demo tương tác cho **Stage 4 - Multi-Agent In-Process**.
+
+Mục tiêu của file:
+
+- Minh họa cách các agent trong Stage 4 phối hợp với nhau.
+- Cho người xem nhập câu hỏi và quan sát router chọn agent phù hợp.
+- Mô phỏng luồng xử lý của LangGraph mà không cần gọi API thật.
+- Phù hợp để trình bày trên lớp hoặc demo nhanh khi không muốn tiêu tốn OpenRouter credit.
+
+Các thành phần chính trong giao diện:
+
+- Ô nhập câu hỏi.
+- Các nút ví dụ nhanh:
+  - Privacy / GDPR
+  - Tax
+  - Compliance
+  - General Law Only
+- Graph tương tác gồm:
+  - `analyze_law`
+  - `check_routing`
+  - `tax_agent`
+  - `compliance_agent`
+  - `privacy_agent`
+  - `aggregate`
+- Timeline hiển thị từng bước xử lý.
+- Panel `Final Answer` mô phỏng kết quả tổng hợp cuối cùng.
+
+Logic mô phỏng:
+
+- Nếu câu hỏi có keyword `tax`, `irs`, `thuế`, `offshore`, `fbar`, `fatca`, hệ thống chọn `tax_agent`.
+- Nếu câu hỏi có keyword `compliance`, `sec`, `regulation`, `sox`, `fcpa`, `aml`, hệ thống chọn `compliance_agent`.
+- Nếu câu hỏi có keyword `data`, `privacy`, `gdpr`, `dữ liệu`, `ccpa`, `consent`, hệ thống chọn `privacy_agent`.
+- Nếu không có keyword specialist, graph chuyển từ router thẳng tới `aggregate`.
+
+Ý nghĩa khi demo:
+
+- Giúp người xem hiểu rõ khác biệt giữa single-agent và multi-agent.
+- Cho thấy vì sao cần `check_routing`.
+- Cho thấy các specialist agents có thể chạy song song trước khi kết quả được tổng hợp.
+- Trực quan hóa bài 4.1 và 4.2 đã thực hiện.
+
+### 8.2. `docs/stage5_latency_demo.html`
+
+Đây là file demo so sánh **trước và sau tối ưu latency của Stage 5 - Distributed A2A System**.
+
+Mục tiêu của file:
+
+- Trình bày số liệu latency đo được khi chạy full Stage 5.
+- So sánh kiến trúc trước tối ưu và sau tối ưu.
+- Minh họa vì sao giảm số lần gọi LLM giúp giảm thời gian phản hồi.
+- Cho thấy tối ưu vẫn giữ được A2A flow và Registry discovery.
+
+Số liệu hiển thị trong demo:
+
+```text
+Before optimization: 70.30s
+After optimization: 0.26s
+Reduction: khoảng 99.6%
+```
+
+Các thành phần chính trong giao diện:
+
+- Nút `Before`: xem luồng trước tối ưu.
+- Nút `After`: xem luồng sau tối ưu.
+- Nút `Run Demo`: chạy animation flow tương ứng.
+- Nút `Show Comparison`: hiển thị so sánh latency.
+- Metric cards:
+  - Latency
+  - Số LLM calls
+  - Trạng thái A2A flow
+  - Tỷ lệ giảm latency
+- Biểu đồ thanh so sánh latency.
+- Danh sách các bước xử lý trước và sau tối ưu.
+
+Luồng trước tối ưu:
+
+```text
+Customer ReAct LLM
+-> Registry discovery
+-> Law analysis LLM
+-> Law routing LLM
+-> Tax Agent LLM
+-> Law aggregate LLM
+-> Customer final LLM
+```
+
+Luồng sau tối ưu:
+
+```text
+Customer direct delegate
+-> Registry discovery
+-> Law cached analysis
+-> Keyword routing
+-> Tax Agent fast path
+-> Template aggregate
+```
+
+Ý nghĩa khi demo:
+
+- Cho thấy latency baseline của hệ thống là `70.30s`.
+- Cho thấy latency sau tối ưu là `0.26s`.
+- Giải thích trực quan nguyên nhân giảm latency:
+  - Bỏ LLM call ở Customer Agent.
+  - Bỏ LLM call ở Law Agent routing.
+  - Dùng deterministic/cached analysis trong `STAGE5_FAST_DEMO=true`.
+- Chứng minh hệ thống vẫn giữ kiến trúc distributed A2A:
+  - Customer Agent
+  - Registry
+  - Law Agent
+  - Tax Agent
+  - A2A message passing
+
+### 8.3. Cách dùng khi thuyết trình
+
+Thứ tự đề xuất khi demo:
+
+1. Mở `stages/stage_4_milti_agent/demo.html`.
+2. Chạy ví dụ `Privacy / GDPR` để cho thấy router chọn `privacy_agent`.
+3. Chạy ví dụ `Tax` để cho thấy router chọn `tax_agent`.
+4. Chạy ví dụ tổng hợp có cả `data`, `gdpr`, `tax` để thấy nhiều agents cùng tham gia.
+5. Mở `docs/stage5_latency_demo.html`.
+6. Chọn `Before`, bấm `Run Demo` để trình bày flow ban đầu.
+7. Chọn `After`, bấm `Run Demo` để trình bày flow tối ưu.
+8. Bấm `Show Comparison` để kết luận latency giảm từ `70.30s` xuống `0.26s`.
 
 ## 9. Các file diagram đã tạo
 
@@ -408,4 +537,3 @@ STAGE5_FAST_DEMO=true
 - Phần 5: Distributed A2A System
 - Đo và tối ưu latency Stage 5
 - Tạo graph, sequence diagram và HTML demo phục vụ trình bày
-
