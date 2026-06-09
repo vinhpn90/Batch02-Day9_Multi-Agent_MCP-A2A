@@ -1,0 +1,22 @@
+# 30 người liên quan vụ ca sĩ Chi Dân và anh trai tổ chức sử dụng ma túy
+
+**Source:** https://tienphong.vn/30-nguoi-lien-quan-vu-ca-si-chi-dan-va-anh-trai-to-chuc-su-dung-ma-tuy-post1771252.tpo
+**Crawled:** 2026-06-08T11:09:22
+**Published:** 2025-08-21T15:26:38+07:00
+
+---
+# 30 người liên quan vụ ca sĩ Chi Dân và anh trai tổ chức sử dụng ma túy
+
+Ngày 21/8, Công an TP.HCM cho biết đã hoàn tất kết luận điều tra và chuyển hồ sơ sang Viện Kiểm sát cùng cấp, đề nghị truy tố ca sĩ Chi Dân (tên thật Nguyễn Trung Hiếu, 36 tuổi), anh trai Nguyễn Trung Tín (44 tuổi) cùng Võ Thị Kim Tuyến (38 tuổi) về tội Tổ chức sử dụng trái phép chất ma túy.
+
+Ngoài ra, 29 người khác cũng bị đề nghị xử lý với các tội danh liên quan.
+
+Theo điều tra, tối 6/11/2024, công an kiểm tra một khách sạn ở huyện Bình Chánh cũ, phát hiện Võ Thị Kim Tuyến tàng trữ 238 gram ma túy. Từ lời khai này, cơ quan chức năng mở rộng điều tra, bắt quả tang nhóm người sử dụng ma túy tại một phòng trọ ở quận Tân Bình cũ, trong đó có anh em ca sĩ Chi Dân.
+
+Kết quả điều tra cho thấy, Chi Dân đã rủ cả nhóm sử dụng ma túy tổng hợp, thuốc lắc và “nước vui”. Người này trực tiếp pha chế “nước vui” với nước tăng lực, nước lọc rồi cùng nhóm sử dụng đến sáng hôm sau. Nguyễn Trung Tín cũng tham gia đặt mua 2 gói ma túy dạng nước trị giá 7 triệu đồng.
+
+Trong vụ án, anh em ca sĩ Chi Dân bị đề nghị truy tố về hành vi tổ chức sử dụng ma túy; còn Võ Thị Kim Tuyến phải đối mặt với cáo buộc mua bán trái phép chất ma túy số lượng lớn, lên tới 1,6 kg .
+
+Từng được mệnh danh là “hoàng tử ballad” của Vpop, Chi Dân sở hữu loạt hit trăm triệu lượt nghe, tạo dấu ấn mạnh mẽ trong giới trẻ những năm 2015–2019. Các ca khúc nổi bật của Chi Dân gồm: Điều anh biết (168 triệu lượt nghe) ; 1234 (148 triệu lượt nghe) ; Có được không em; Làm vợ anh nhé ; Người tôi yêu ; Sự thật sau một lời hứa...
+
+Tài xế buồn ngủ, container cày nát dải phân cách ở Củ Chi

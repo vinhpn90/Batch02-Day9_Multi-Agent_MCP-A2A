@@ -1,0 +1,30 @@
+# Kết quả xét nghiệm ma túy của ca sĩ Ngọc Sơn
+
+**Source:** https://tienphong.vn/ket-qua-xet-nghiem-ma-tuy-cua-ca-si-ngoc-son-post1845495.tpo
+**Crawled:** 2026-06-08T11:09:22
+**Published:** 2026-05-22T18:44:12+07:00
+
+---
+# Kết quả xét nghiệm ma túy của ca sĩ Ngọc Sơn
+
+Chiều 22/5, ca sĩ Ngọc Sơn công khai kết quả xét nghiệm với 5 loại ma túy. Ngọc Sơn cũng livestream chia sẻ quan điểm sống sạch sẽ, đàng hoàng, nhắn nhủ khán giả đừng mặc định "nghệ sĩ ai cũng chơi đồ".
+
+Chiều 22/5, ca sĩ Ngọc Sơn livestream đính chính tin đồn sử dụng chất cấm. Nam ca sĩ khẳng định bản thân không sử dụng bất kỳ chất kích thích nào, tuyên bố sẽ tặng cả tài sản nếu ai đó kiểm tra và phát hiện chất cấm. Nam nghệ sĩ còn ngẫu hứng đàn, hát và khoe vũ đạo trong loạt ca khúc quen thuộc để chứng minh bản thân có sức khỏe tốt.
+
+"Dù bất kỳ lúc nào từ đây đến cuối cuộc đời, Ngọc Sơn không bao giờ có nồng độ cồn. Mặc dù tôi không lái xe cũng không có. Điều thứ hai, tôi sẽ tặng cả gia tài, tặng hết luôn, tặng tất cả mọi thứ nếu trong tóc, trong con người tôi có bất kỳ chất cấm nào. Tôi không bao giờ. Người ta nói để ca sĩ hát sung bao nhiêu bài đó phải có một chút chất kích thích nhưng không phải. Người sung do khỏe mạnh như tôi khác, tôi bình thường, không dùng chất gì", anh chia sẻ.
+
+Ngọc Sơn nói quan điểm của anh là sống sạch sẽ, đàng hoàng, nhắn nhủ khán giả đừng mặc định "nghệ sĩ ai cũng chơi đồ".
+
+Sau đó, Ngọc Sơn tự lái xe đến Bệnh viện Nhân dân Gia Định cơ sở 2 (TPHCM) để tiến hành xét nghiệm chất cấm. Đi cùng anh có ca sĩ Quách Tuấn Du và một người em thân thiết. Trong suốt quá trình đó, nam ca sĩ tiếp tục livestream chia sẻ mọi diễn biến. "Mọi người chia sẻ những thông tin không đúng, làm ảnh hưởng đến công việc của nghệ sĩ. Nhiều bầu show hôm nay gọi điện cho Quách Tuấn Du và đại diện Ngọc Sơn hỏi tình hình. Livestream này như một cách để thông báo với tất cả mọi người”, Quách Tuấn Du nói.
+
+Sau khi làm thủ tục ở bệnh viện, ca sĩ Ngọc Sơn công khai kết quả xét nghiệm âm tính với 5 loại ma túy, đồng thời đến công an phường Bến Thành nộp kết quả xét nghiệm.
+
+Theo Ngọc Sơn, anh nhận được nhiều lời đồn trong cuộc sống, nhưng không giải thích hay cãi cọ. Đến tin đồn liên quan chất cấm, nam ca sĩ quyết định không giữ im lặng và công khai kết quả kiểm tra.
+
+Trước đó, mạng xã hội xuất hiện một đoạn video ghi lại khoảnh khắc danh ca Ngọc Sơn ngồi trong ô tô với biểu cảm khác lạ, nhất là ánh mắt. Qua đó, nhiều người bàn tán về tình trạng sức khỏe của Ngọc Sơn. Có người cho rằng vì sử dụng chất cấm nên nam ca sĩ mới liên tục để lộ biểu cảm kỳ quặc.
+
+Ca sĩ Ngọc Sơn sinh năm 1968, nổi tiếng qua hàng loạt ca khúc nổi tiếng như Lòng mẹ, Tình cha, Vầng trăng cô đơn, được mệnh danh "ông hoàng nhạc sến".
+
+Ngoài ca hát, Ngọc Sơn còn hoạt động sáng tác và thường xuyên tham gia các chương trình thiện nguyện.
+
+Hà Anh Tuấn tài trợ chi phí cho bé gái 2 tuổi ghép gan
